@@ -1,0 +1,1366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alison Archer — Romantasy Author of SHADOWARD</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================
+   RESET & BASE
+   ========================================== */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  color: #f5f0e8;
+  background: #0a0a0c;
+  overflow-x: hidden;
+}
+a { text-decoration: none; color: inherit; }
+img { max-width: 100%; display: block; }
+
+/* ==========================================
+   CUSTOM CURSOR GLOW (subtle)
+   ========================================== */
+.cursor-glow {
+  position: fixed;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,168,77,0.04) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.3s;
+}
+
+/* ==========================================
+   SCROLL-REVEAL ANIMATIONS
+   ========================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.15s; }
+.reveal-delay-2 { transition-delay: 0.3s; }
+.reveal-delay-3 { transition-delay: 0.45s; }
+.reveal-delay-4 { transition-delay: 0.6s; }
+
+/* ==========================================
+   NAVIGATION
+   ========================================== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 22px 48px;
+  transition: background 0.4s, padding 0.4s, backdrop-filter 0.4s;
+}
+.nav.scrolled {
+  background: rgba(10, 10, 12, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 14px 48px;
+  border-bottom: 1px solid rgba(196, 168, 77, 0.1);
+}
+.nav-left { display: flex; align-items: center; gap: 32px; }
+.nav-left a {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  color: #e8e2d6;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-left a::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px;
+  background: #c4a84d;
+  transition: width 0.3s;
+}
+.nav-left a:hover { color: #fff; }
+.nav-left a:hover::after { width: 100%; }
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight: 600;
+  letter-spacing: 6px; text-transform: uppercase;
+  color: #fff;
+}
+.nav-right { display: flex; align-items: center; gap: 20px; }
+.nav-right .social-icon {
+  width: 20px; height: 20px;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+  fill: #f5f0e8;
+}
+.nav-right .social-icon:hover { opacity: 1; }
+.nav-cta {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px; font-weight: 700;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  padding: 12px 28px;
+  border: 2px solid #c4a84d;
+  color: #e8d56b;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.nav-cta::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(196, 168, 77, 0.15), rgba(196, 168, 77, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.nav-cta:hover { border-color: #e8d56b; color: #fff; }
+.nav-cta:hover::before { opacity: 1; }
+
+/* ==========================================
+   HERO SECTION — Full-screen cinematic
+   ========================================== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  background: #0a0a0c;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(45, 10, 46, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 70%, rgba(10, 20, 50, 0.15) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 60%, rgba(15, 23, 20, 0.2) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 100%, rgba(196, 168, 77, 0.03) 0%, transparent 30%);
+}
+
+/* Canvas for animated particles */
+#hero-canvas {
+  position: absolute; inset: 0; z-index: 1;
+  pointer-events: none;
+}
+
+/* Vignette overlay */
+.hero-vignette {
+  position: absolute; inset: 0; z-index: 2;
+  background:
+    radial-gradient(ellipse at center, transparent 40%, rgba(10, 10, 12, 0.6) 100%);
+  pointer-events: none;
+}
+
+/* Bottom fade */
+.hero-fade {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  height: 200px; z-index: 3;
+  background: linear-gradient(to bottom, transparent, #0a0a0c);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative; z-index: 4;
+  padding: 0 40px;
+  max-width: 960px;
+}
+.hero-pre {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 5px; text-transform: uppercase;
+  color: #e8d56b;
+  margin-bottom: 32px;
+}
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(48px, 6.5vw, 80px);
+  font-weight: 600; font-style: italic;
+  line-height: 1.15;
+  color: #fff;
+  margin-bottom: 40px;
+}
+.hero-title .gold { color: #e8d56b; }
+.hero-sub {
+  font-size: clamp(22px, 2.5vw, 26px);
+  font-weight: 600;
+  line-height: 1.7;
+  color: #ddd8cc;
+  max-width: 640px;
+  margin: 0 auto 52px;
+}
+.hero-cta-group {
+  display: flex; align-items: center; justify-content: center;
+  gap: 24px; flex-wrap: wrap;
+}
+.btn-primary {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  padding: 22px 56px;
+  background: linear-gradient(135deg, #d4b85c, #c4a84d, #d4b85c);
+  background-size: 200% 200%;
+  color: #0a0a0c;
+  border: none;
+  cursor: pointer;
+  transition: all 0.4s;
+  position: relative;
+}
+.btn-primary:hover {
+  background-position: 100% 0;
+  box-shadow: 0 0 40px rgba(196, 168, 77, 0.3);
+  transform: translateY(-2px);
+}
+.btn-ghost {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  padding: 22px 56px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+  transition: all 0.3s;
+}
+.btn-ghost:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* (scroll indicator removed) */
+
+/* ==========================================
+   GOLD DIVIDER STRIP
+   ========================================== */
+.gold-strip {
+  position: relative;
+  padding: 28px 40px;
+  background: linear-gradient(135deg, rgba(196, 168, 77, 0.1), rgba(196, 168, 77, 0.04));
+  border-top: 1px solid rgba(196, 168, 77, 0.2);
+  border-bottom: 1px solid rgba(196, 168, 77, 0.2);
+  overflow: hidden;
+}
+.gold-strip-inner {
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; flex-wrap: wrap;
+  font-size: 17px; color: #d4b85c;
+  letter-spacing: 2.5px; text-transform: uppercase;
+  font-weight: 700;
+}
+.gold-strip-inner .sep {
+  width: 5px; height: 5px;
+  background: #c4a84d;
+  border-radius: 50%;
+}
+
+/* ==========================================
+   SECTION: THE BOOK
+   ========================================== */
+.book-section {
+  position: relative;
+  padding: 140px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 70% 20%, rgba(45, 10, 46, 0.3) 0%, transparent 50%),
+    radial-gradient(ellipse at 20% 80%, rgba(10, 20, 60, 0.2) 0%, transparent 40%),
+    linear-gradient(170deg, #0e0a14, #0c0c18, #0a0a0c);
+}
+.book-section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.book-visual {
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+}
+
+/* 3D Book cover */
+.book-3d {
+  perspective: 1200px;
+}
+.book-3d-inner {
+  width: 300px;
+  aspect-ratio: 2/3;
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateY(-12deg);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.book-3d:hover .book-3d-inner {
+  transform: rotateY(-4deg) scale(1.03);
+}
+
+.book-cover {
+  position: absolute; inset: 0;
+  border: 1px solid rgba(196, 168, 77, 0.25);
+  box-shadow:
+    10px 10px 40px rgba(0, 0, 0, 0.6),
+    0 0 80px rgba(45, 10, 46, 0.15),
+    inset 0 0 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+.book-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.book-cover::before {
+  content: '';
+  position: absolute; inset: 8px;
+  border: 1px solid rgba(196, 168, 77, 0.15);
+  pointer-events: none;
+}
+/* Decorative corner flourishes */
+.book-cover .corner {
+  position: absolute;
+  width: 24px; height: 24px;
+  border-color: rgba(196, 168, 77, 0.35);
+  border-style: solid;
+}
+.book-cover .corner.tl { top: 16px; left: 16px; border-width: 1px 0 0 1px; }
+.book-cover .corner.tr { top: 16px; right: 16px; border-width: 1px 1px 0 0; }
+.book-cover .corner.bl { bottom: 16px; left: 16px; border-width: 0 0 1px 1px; }
+.book-cover .corner.br { bottom: 16px; right: 16px; border-width: 0 1px 1px 0; }
+
+.book-cover .ornament {
+  font-size: 22px; color: rgba(196, 168, 77, 0.5);
+  letter-spacing: 8px; margin-bottom: 16px;
+}
+.book-cover .cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 42px; font-style: italic; font-weight: 600;
+  color: #e0d4a8;
+  text-align: center;
+  line-height: 1.2;
+  text-shadow: 0 0 40px rgba(196, 168, 77, 0.2);
+}
+.book-cover .cover-divider {
+  width: 50px; height: 1px;
+  background: linear-gradient(to right, transparent, rgba(196, 168, 77, 0.6), transparent);
+  margin: 16px 0;
+}
+.book-cover .cover-subtitle {
+  font-size: 13px; font-weight: 700; letter-spacing: 3px; text-transform: uppercase;
+  color: #b8a880;
+  margin-bottom: 6px;
+}
+.book-cover .cover-author {
+  font-size: 15px; font-weight: 600; letter-spacing: 2px;
+  color: #a89870;
+}
+
+/* Book spine illusion */
+.book-spine {
+  position: absolute;
+  top: 2px; left: -18px; bottom: 2px;
+  width: 18px;
+  background: linear-gradient(to right, #0e0812, #1a1020, #120a18);
+  transform: rotateY(90deg);
+  transform-origin: right center;
+  border: 1px solid rgba(196, 168, 77, 0.1);
+}
+
+/* Glow behind book */
+.book-glow {
+  position: absolute;
+  width: 380px; height: 540px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(ellipse, rgba(45, 10, 46, 0.3) 0%, transparent 60%);
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.book-text h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: #d4b85c;
+  margin-bottom: 20px;
+}
+.book-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(44px, 5vw, 64px);
+  font-weight: 600;
+  letter-spacing: 6px; text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 32px;
+}
+.book-text .logline {
+  font-size: 26px; font-style: italic; font-weight: 600;
+  line-height: 1.6;
+  color: #e8d56b;
+  margin-bottom: 28px;
+  border-left: 3px solid #c4a84d;
+  padding-left: 24px;
+}
+.book-text p {
+  font-size: 23px; line-height: 1.8;
+  color: #d8d2c4;
+  margin-bottom: 42px;
+}
+.book-text .btn-primary { margin-right: 16px; }
+
+/* ==========================================
+   SECTION: HOOK QUOTES — rotating
+   ========================================== */
+.hooks-section {
+  position: relative;
+  padding: 110px 40px;
+  text-align: center;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(80, 50, 100, 0.2) 0%, transparent 50%),
+    radial-gradient(ellipse at 30% 80%, rgba(45, 20, 60, 0.15) 0%, transparent 40%),
+    linear-gradient(160deg, #1a1028, #16102a, #1a0e24);
+  border-top: 1px solid rgba(160, 120, 180, 0.12);
+  border-bottom: 1px solid rgba(160, 120, 180, 0.12);
+  overflow: hidden;
+}
+.hooks-ornament {
+  font-size: 80px; color: rgba(196, 168, 77, 0.4);
+  font-family: 'Playfair Display', serif;
+  margin-bottom: 36px;
+  line-height: 0.5;
+}
+.hooks-nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.hooks-arrow {
+  background: none;
+  border: 2px solid rgba(196, 168, 77, 0.25);
+  color: #d4b85c;
+  width: 48px; height: 48px;
+  font-size: 28px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  flex-shrink: 0;
+  border-radius: 50%;
+  font-family: 'Playfair Display', serif;
+  line-height: 1;
+}
+.hooks-arrow:hover {
+  border-color: #c4a84d;
+  background: rgba(196, 168, 77, 0.08);
+  color: #e8d56b;
+}
+.hooks-carousel {
+  position: relative;
+  flex: 1;
+  max-width: 800px;
+  height: 160px;
+  overflow: hidden;
+}
+.hook-quote {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  padding: 0 20px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.hook-quote.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.hook-quote blockquote {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(26px, 3.5vw, 38px);
+  font-style: italic; font-weight: 500;
+  line-height: 1.5;
+  color: #f0ebe0;
+}
+.hooks-dots {
+  display: flex; align-items: center; justify-content: center;
+  gap: 14px; margin-top: 54px;
+}
+.hooks-dots .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(196, 168, 77, 0.25);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.hooks-dots .dot.active {
+  background: #d4b85c;
+  box-shadow: 0 0 12px rgba(196, 168, 77, 0.4);
+}
+
+/* ==========================================
+   SECTION: TROPES
+   ========================================== */
+.tropes-section {
+  position: relative;
+  padding: 120px 40px;
+  background:
+    radial-gradient(ellipse at 40% 30%, rgba(15, 35, 30, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 70%, rgba(10, 25, 40, 0.2) 0%, transparent 40%),
+    linear-gradient(170deg, #0c1614, #0a1210, #0c100e);
+}
+.tropes-header {
+  text-align: center;
+  margin-bottom: 70px;
+}
+.tropes-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(34px, 4.5vw, 50px);
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.tropes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.trope-card {
+  position: relative;
+  padding: 40px 28px;
+  border: 1px solid rgba(196, 168, 77, 0.18);
+  background: rgba(196, 168, 77, 0.03);
+  text-align: center;
+  transition: all 0.4s;
+  overflow: hidden;
+}
+.trope-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(196, 168, 77, 0.08), transparent);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.trope-card:hover {
+  border-color: rgba(196, 168, 77, 0.35);
+  transform: translateY(-4px);
+  background: rgba(196, 168, 77, 0.06);
+}
+.trope-card:hover::before { opacity: 1; }
+.trope-card h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: 21px; font-weight: 600;
+  color: #f0e8d0;
+  letter-spacing: 1px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ==========================================
+   SECTION: ABOUT THE AUTHOR
+   ========================================== */
+.author-section {
+  position: relative;
+  padding: 140px 0;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(15, 35, 30, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(45, 10, 46, 0.15) 0%, transparent 40%),
+    linear-gradient(170deg, #0c1410, #0a100e, #0c0e10);
+}
+.author-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 60px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.author-photo {
+  position: relative;
+  aspect-ratio: 3/4;
+  background:
+    radial-gradient(ellipse at center, rgba(20, 35, 30, 0.5) 0%, rgba(10, 10, 12, 0.8) 100%);
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(196, 168, 77, 0.15);
+  overflow: hidden;
+}
+.author-photo::before {
+  content: '';
+  position: absolute; inset: 6px;
+  border: 1px solid rgba(196, 168, 77, 0.08);
+  pointer-events: none;
+}
+.author-photo .placeholder-text {
+  color: rgba(200, 192, 176, 0.4);
+  font-style: italic; font-size: 18px;
+  text-align: center;
+}
+.author-text h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: #d4b85c;
+  margin-bottom: 20px;
+}
+.author-text h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(40px, 4.5vw, 56px);
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 32px;
+}
+.author-text p {
+  font-size: 23px; line-height: 1.8;
+  color: #d8d2c4;
+  margin-bottom: 28px;
+}
+.author-text .author-tagline {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-style: italic; font-weight: 500;
+  color: #e8d56b;
+  margin-bottom: 40px;
+}
+
+/* ==========================================
+   SECTION: NEWSLETTER
+   ========================================== */
+.newsletter-section {
+  position: relative;
+  padding: 130px 40px;
+  text-align: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(50, 15, 55, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 100%, rgba(196, 168, 77, 0.05) 0%, transparent 30%),
+    linear-gradient(170deg, #12101a, #100e18, #0e0c14);
+  border-top: 1px solid rgba(160, 120, 180, 0.1);
+}
+#newsletter-stars {
+  position: absolute; inset: 0;
+  pointer-events: none; z-index: 0;
+}
+.newsletter-inner {
+  position: relative; z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+}
+.newsletter-inner h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(40px, 5vw, 58px);
+  font-weight: 600; font-style: italic;
+  color: #fff;
+  margin-bottom: 24px;
+}
+.newsletter-inner .subtitle {
+  font-size: 23px; font-weight: 600;
+  color: #d0cab8;
+  margin-bottom: 44px;
+  line-height: 1.6;
+}
+.newsletter-benefits {
+  text-align: left;
+  max-width: 540px;
+  margin: 0 auto 44px;
+}
+.newsletter-benefits .benefit {
+  display: flex; align-items: baseline; gap: 14px;
+  margin-bottom: 20px;
+  font-size: 22px; font-weight: 600;
+  color: #ddd8cc;
+  line-height: 1.5;
+}
+.newsletter-benefits .benefit .arrow {
+  color: #d4b85c;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.newsletter-form {
+  display: flex; gap: 0;
+  max-width: 540px;
+  margin: 0 auto 22px;
+}
+.newsletter-form input {
+  flex: 1;
+  padding: 22px 28px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 2px solid rgba(196, 168, 77, 0.25);
+  border-right: none;
+  color: #fff;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 600;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.newsletter-form input::placeholder {
+  color: rgba(200, 192, 176, 0.45);
+}
+.newsletter-form input:focus {
+  border-color: rgba(196, 168, 77, 0.45);
+}
+.newsletter-form button {
+  padding: 22px 40px;
+  background: linear-gradient(135deg, #d4b85c, #c4a84d);
+  color: #0a0a0c;
+  border: 2px solid #c4a84d;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.newsletter-form button:hover {
+  box-shadow: 0 0 30px rgba(196, 168, 77, 0.25);
+}
+.newsletter-fine {
+  font-size: 17px; font-weight: 500;
+  color: rgba(200, 192, 176, 0.55);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+.newsletter-proof {
+  font-size: 19px; font-weight: 600;
+  color: #c4a84d;
+  font-style: italic;
+}
+
+/* ==========================================
+   SECTION: SOCIAL / FOLLOW
+   ========================================== */
+.social-section {
+  position: relative;
+  padding: 90px 40px;
+  text-align: center;
+  background:
+    linear-gradient(135deg, rgba(196, 168, 77, 0.06), rgba(196, 168, 77, 0.02));
+  border-top: 1px solid rgba(196, 168, 77, 0.15);
+  border-bottom: 1px solid rgba(196, 168, 77, 0.15);
+}
+.social-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(30px, 3.5vw, 42px);
+  font-weight: 500; font-style: italic;
+  color: #fff;
+  margin-bottom: 36px;
+}
+.social-links {
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px;
+  margin-bottom: 24px;
+}
+.social-link {
+  display: flex; align-items: center; gap: 12px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px; font-weight: 700;
+  letter-spacing: 2px; text-transform: uppercase;
+  color: #d4b85c;
+  transition: all 0.3s;
+  padding: 14px 32px;
+  border: 1px solid rgba(196, 168, 77, 0.2);
+}
+.social-link svg {
+  width: 22px; height: 22px;
+  fill: #d4b85c;
+  transition: fill 0.3s;
+}
+.social-link:hover {
+  color: #e8d56b;
+  border-color: rgba(196, 168, 77, 0.4);
+  background: rgba(196, 168, 77, 0.05);
+}
+.social-link:hover svg { fill: #e8d56b; }
+.social-handle {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px; font-weight: 600;
+  color: rgba(200, 192, 176, 0.5);
+  letter-spacing: 1px;
+}
+
+/* ==========================================
+   FOOTER
+   ========================================== */
+.footer {
+  padding: 36px 40px;
+  text-align: center;
+  background: #060608;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+.footer-copy {
+  font-size: 14px; font-weight: 500;
+  color: rgba(200, 192, 176, 0.3);
+  letter-spacing: 1px;
+}
+
+/* ==========================================
+   FLOATING PARTICLES (CSS)
+   ========================================== */
+.floating-particle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: drift linear infinite;
+}
+@keyframes drift {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+@media (max-width: 900px) {
+  .nav { padding: 16px 24px; }
+  .nav-left { display: none; }
+  .nav-right .social-icon { display: none; }
+
+  .book-section-inner {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    padding: 0 30px;
+  }
+  .book-visual { order: -1; }
+  .book-text { text-align: center; }
+  .book-text .logline { border-left: none; padding-left: 0; text-align: center; }
+
+  .author-inner {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    padding: 0 30px;
+  }
+  .author-photo { max-width: 400px; margin: 0 auto; }
+  .author-text { text-align: center; }
+
+  .tropes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .hero-content { padding: 0 24px; }
+}
+
+@media (max-width: 600px) {
+  .hero-cta-group { flex-direction: column; }
+  .btn-primary, .btn-ghost { width: 100%; text-align: center; }
+  .newsletter-form { flex-direction: column; }
+  .newsletter-form input { border-right: 2px solid rgba(196, 168, 77, 0.25); }
+  .tropes-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
+  .trope-card { padding: 24px 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Cursor glow -->
+<div class="cursor-glow" id="cursorGlow"></div>
+
+<!-- ========================================
+     NAVIGATION
+     ======================================== -->
+<nav class="nav" id="mainNav">
+  <div class="nav-left">
+    <a href="/about">About</a>
+    <a href="/books">Books</a>
+    <a href="/signup">Sign Up</a>
+  </div>
+  <a href="/" class="nav-logo">Alison Archer</a>
+  <div class="nav-right">
+    <a href="#" aria-label="TikTok">
+      <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.73a8.19 8.19 0 004.76 1.52v-3.4a4.85 4.85 0 01-1-.16z"/>
+      </svg>
+    </a>
+    <a href="#" aria-label="Instagram">
+      <svg class="social-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+      </svg>
+    </a>
+    <a href="/signup" class="nav-cta">Get Early Access</a>
+  </div>
+</nav>
+
+<!-- ========================================
+     HERO
+     ======================================== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-vignette"></div>
+  <div class="hero-fade"></div>
+
+  <div class="hero-content">
+    <p class="hero-pre reveal">Romantasy Author</p>
+    <h1 class="hero-title reveal reveal-delay-1">Stories worth<br><span class="gold">staying up</span> for.</h1>
+    <p class="hero-sub reveal reveal-delay-2">Romantasy with mystery, heat, and twists you won't see coming.</p>
+    <div class="hero-cta-group reveal reveal-delay-3">
+      <a href="/books" class="btn-primary">Discover Shadoward</a>
+      <a href="/signup" class="btn-ghost">Get Early Access</a>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     GOLD STRIP
+     ======================================== -->
+<div class="gold-strip">
+  <div class="gold-strip-inner">
+    <span>Romantasy</span>
+    <span class="sep"></span>
+    <span>Mystery</span>
+    <span class="sep"></span>
+    <span>Slow Burn</span>
+    <span class="sep"></span>
+    <span>Dark Lord Romance</span>
+    <span class="sep"></span>
+    <span>Hidden Royalty</span>
+    <span class="sep"></span>
+    <span>Original Mythology</span>
+  </div>
+</div>
+
+<!-- ========================================
+     THE BOOK
+     ======================================== -->
+<section class="book-section">
+  <div class="book-section-inner">
+    <div class="book-visual reveal">
+      <div class="book-glow"></div>
+      <a href="/books" class="book-3d" style="display:block;cursor:pointer;">
+        <div class="book-3d-inner">
+          <div class="book-spine"></div>
+          <div class="book-cover">
+            <img src="https://static1.squarespace.com/static/6875e1fd2269c346bbb9de42/t/69be5376fed5585eafbd7216/1774080887217/shadoward-coming-soon-cover.jpg" alt="SHADOWARD by Alison Archer — Coming Soon" >
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="book-text">
+      <h3 class="reveal">Coming Soon</h3>
+      <h2 class="reveal reveal-delay-1">Shadoward</h2>
+      <div class="logline reveal reveal-delay-2">"A murder mystery romantasy about a murder that hasn't happened yet."</div>
+      <p class="reveal reveal-delay-3">A princess on the run. A masked hunter who won't stop. And the lord of the nightlands who might be her only hope.</p>
+      <div class="reveal reveal-delay-4">
+        <a href="/books" class="btn-primary">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     HOOK QUOTES CAROUSEL
+     ======================================== -->
+<section class="hooks-section">
+  <div class="hooks-ornament reveal">&#8220;</div>
+  <div class="hooks-nav-wrapper">
+    <button class="hooks-arrow hooks-prev" id="hooksPrev" aria-label="Previous quote">&#8249;</button>
+    <div class="hooks-carousel" id="hooksCarousel">
+      <div class="hook-quote active">
+        <blockquote>"She's there to steal from him. She's definitely not supposed to fall for him. Good thing he's falling harder."</blockquote>
+      </div>
+      <div class="hook-quote">
+        <blockquote>"She ran from her own murder. She's still running."</blockquote>
+      </div>
+      <div class="hook-quote">
+        <blockquote>"A princess who vanished. A lord with a dark reputation. A killer who isn't finished."</blockquote>
+      </div>
+      <div class="hook-quote">
+        <blockquote>"A murder mystery where the victim is trying to solve her own case before the killer catches up."</blockquote>
+      </div>
+    </div>
+    <button class="hooks-arrow hooks-next" id="hooksNext" aria-label="Next quote">&#8250;</button>
+  </div>
+  <div class="hooks-dots" id="hooksDots">
+    <div class="dot active" data-index="0"></div>
+    <div class="dot" data-index="1"></div>
+    <div class="dot" data-index="2"></div>
+    <div class="dot" data-index="3"></div>
+  </div>
+</section>
+
+<!-- ========================================
+     TROPES
+     ======================================== -->
+<section class="tropes-section">
+  <div class="tropes-header">
+    <h2 class="reveal">The tropes.</h2>
+  </div>
+  <div class="tropes-grid">
+    <div class="trope-card reveal">
+      <h4>Slow Burn</h4>
+    </div>
+    <div class="trope-card reveal reveal-delay-1">
+      <h4>Morally Gray MMC</h4>
+    </div>
+    <div class="trope-card reveal reveal-delay-2">
+      <h4>Forced Proximity</h4>
+    </div>
+    <div class="trope-card reveal reveal-delay-3">
+      <h4>Fugitive Princess</h4>
+    </div>
+    <div class="trope-card reveal">
+      <h4>Dark Lord Romance</h4>
+    </div>
+    <div class="trope-card reveal reveal-delay-1">
+      <h4>Murder Mystery</h4>
+    </div>
+    <div class="trope-card reveal reveal-delay-2">
+      <h4>Hidden Identities</h4>
+    </div>
+    <div class="trope-card reveal reveal-delay-3">
+      <h4>Original Mythology</h4>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     ABOUT THE AUTHOR
+     ======================================== -->
+<section class="author-section">
+  <div class="author-inner">
+    <div class="author-photo reveal">
+      <img src="https://static1.squarespace.com/static/6875e1fd2269c346bbb9de42/t/69a2cd5bb02a574b342d5641/1772277086118/PXL_20250923_170719572+%284%29.jpg" alt="Alison Archer, romantasy author">
+    </div>
+    <div class="author-text">
+      <h3 class="reveal">The Author</h3>
+      <h2 class="reveal reveal-delay-1">Alison Archer</h2>
+      <p class="reveal reveal-delay-2">Award-winning, bestselling author Alison Archer writes romantasy under a pen name. SHADOWARD is her new romantasy, coming September 2026.</p>
+      <div class="reveal reveal-delay-4">
+        <a href="/about" class="btn-ghost">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================
+     NEWSLETTER (combined with CTA)
+     ======================================== -->
+<section class="newsletter-section">
+  <canvas id="newsletter-stars"></canvas>
+  <div class="newsletter-inner">
+    <h2 class="reveal">Read it before anyone else.</h2>
+    <p class="subtitle reveal reveal-delay-1">Be the first to get updates about SHADOWARD, including the cover reveal and release date.</p>
+    <form class="newsletter-form reveal reveal-delay-2" action="https://app.kit.com/forms/9125986/subscriptions" method="post" data-sv-form="9125986" data-uid="24607f29d3">
+      <input type="email" name="email_address" placeholder="Your email address" required>
+      <button type="submit">I'm In &#10141;</button>
+    </form>
+    <p class="newsletter-fine reveal reveal-delay-2">No spam. Unsubscribe any time. Just the good stuff.</p>
+    <p class="newsletter-proof reveal reveal-delay-3">Join 500+ readers already on the list.</p>
+  </div>
+</section>
+
+<!-- ========================================
+     SOCIAL / FOLLOW SECTION
+     ======================================== -->
+<section class="social-section">
+  <h2 class="reveal">Follow the journey.</h2>
+  <div class="social-links reveal reveal-delay-1">
+    <a href="#" class="social-link">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.34-6.34V8.73a8.19 8.19 0 004.76 1.52v-3.4a4.85 4.85 0 01-1-.16z"/></svg>
+      <span>TikTok</span>
+    </a>
+    <a href="#" class="social-link">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      <span>Instagram</span>
+    </a>
+  </div>
+  <p class="social-handle reveal reveal-delay-2">@authoralisonarcher</p>
+</section>
+
+<!-- ========================================
+     FOOTER
+     ======================================== -->
+<footer class="footer">
+  <p class="footer-copy">&copy; 2026 Alison Archer. All rights reserved.</p>
+</footer>
+
+<!-- ==========================================
+     SCRIPTS
+     ========================================== -->
+<script>
+// ==========================================
+// ANIMATED STAR CANVAS — Hero
+// ==========================================
+(function() {
+  var canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var stars = [];
+  var shootingStars = [];
+  var width, height;
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Create stars
+  for (var i = 0; i < 200; i++) {
+    stars.push({
+      x: Math.random() * 2000,
+      y: Math.random() * 1200,
+      size: 0.3 + Math.random() * 1.8,
+      opacity: 0.1 + Math.random() * 0.5,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: 0.005 + Math.random() * 0.015,
+      gold: Math.random() < 0.15
+    });
+  }
+
+  // Occasional shooting star
+  function addShootingStar() {
+    if (shootingStars.length < 2 && Math.random() < 0.003) {
+      shootingStars.push({
+        x: Math.random() * width * 0.8,
+        y: Math.random() * height * 0.4,
+        len: 60 + Math.random() * 80,
+        speed: 4 + Math.random() * 4,
+        angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
+        opacity: 0.6 + Math.random() * 0.4,
+        life: 1
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height);
+
+    // Stars
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      s.pulse += s.pulseSpeed;
+      var flicker = 0.7 + 0.3 * Math.sin(s.pulse);
+      var alpha = s.opacity * flicker;
+
+      if (s.gold) {
+        ctx.fillStyle = 'rgba(196, 168, 77, ' + alpha * 0.6 + ')';
+        ctx.shadowColor = 'rgba(196, 168, 77, ' + alpha * 0.2 + ')';
+      } else {
+        ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+        ctx.shadowColor = 'rgba(255, 255, 255, ' + alpha * 0.3 + ')';
+      }
+      ctx.shadowBlur = s.size * 3;
+      ctx.beginPath();
+      ctx.arc(s.x * (width / 2000), s.y * (height / 1200), s.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+
+    // Shooting stars
+    addShootingStar();
+    for (var j = shootingStars.length - 1; j >= 0; j--) {
+      var ss = shootingStars[j];
+      ss.x += Math.cos(ss.angle) * ss.speed;
+      ss.y += Math.sin(ss.angle) * ss.speed;
+      ss.life -= 0.015;
+
+      if (ss.life <= 0) {
+        shootingStars.splice(j, 1);
+        continue;
+      }
+
+      var grad = ctx.createLinearGradient(
+        ss.x, ss.y,
+        ss.x - Math.cos(ss.angle) * ss.len,
+        ss.y - Math.sin(ss.angle) * ss.len
+      );
+      grad.addColorStop(0, 'rgba(255, 255, 255, ' + ss.opacity * ss.life + ')');
+      grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.strokeStyle = grad;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(ss.x, ss.y);
+      ctx.lineTo(
+        ss.x - Math.cos(ss.angle) * ss.len,
+        ss.y - Math.sin(ss.angle) * ss.len
+      );
+      ctx.stroke();
+    }
+
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ==========================================
+// NEWSLETTER STARS (simple CSS-based)
+// ==========================================
+(function() {
+  var container = document.getElementById('newsletter-stars');
+  if (!container) return;
+  var ctx = container.getContext('2d');
+
+  function resize() {
+    container.width = container.parentElement.offsetWidth;
+    container.height = container.parentElement.offsetHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var stars = [];
+  for (var i = 0; i < 80; i++) {
+    stars.push({
+      x: Math.random(),
+      y: Math.random(),
+      size: 0.3 + Math.random() * 1.2,
+      opacity: 0.05 + Math.random() * 0.2,
+      pulse: Math.random() * Math.PI * 2,
+      pulseSpeed: 0.003 + Math.random() * 0.01
+    });
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, container.width, container.height);
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      s.pulse += s.pulseSpeed;
+      var alpha = s.opacity * (0.6 + 0.4 * Math.sin(s.pulse));
+      ctx.fillStyle = 'rgba(255, 255, 255, ' + alpha + ')';
+      ctx.beginPath();
+      ctx.arc(s.x * container.width, s.y * container.height, s.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ==========================================
+// SCROLL REVEAL
+// ==========================================
+(function() {
+  var reveals = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+  reveals.forEach(function(el) { observer.observe(el); });
+})();
+
+// ==========================================
+// NAV SCROLL EFFECT
+// ==========================================
+(function() {
+  var nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 80) {
+      nav.classList.add('scrolled');
+    } else {
+      nav.classList.remove('scrolled');
+    }
+  });
+})();
+
+// ==========================================
+// CURSOR GLOW
+// ==========================================
+(function() {
+  var glow = document.getElementById('cursorGlow');
+  if (!glow) return;
+  // Only on desktop
+  if (window.innerWidth < 900) { glow.style.display = 'none'; return; }
+  document.addEventListener('mousemove', function(e) {
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+  });
+})();
+
+// ==========================================
+// HOOKS CAROUSEL
+// ==========================================
+(function() {
+  var quotes = document.querySelectorAll('.hook-quote');
+  var dots = document.querySelectorAll('.hooks-dots .dot');
+  var prevBtn = document.getElementById('hooksPrev');
+  var nextBtn = document.getElementById('hooksNext');
+  var current = 0;
+  var total = quotes.length;
+  var autoTimer;
+
+  function show(index) {
+    quotes.forEach(function(q) { q.classList.remove('active'); });
+    dots.forEach(function(d) { d.classList.remove('active'); });
+    quotes[index].classList.add('active');
+    dots[index].classList.add('active');
+    current = index;
+  }
+
+  function resetAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function() {
+      show((current + 1) % total);
+    }, 5000);
+  }
+
+  // Auto-rotate
+  resetAuto();
+
+  // Arrow buttons
+  if (prevBtn) {
+    prevBtn.addEventListener('click', function() {
+      show((current - 1 + total) % total);
+      resetAuto();
+    });
+  }
+  if (nextBtn) {
+    nextBtn.addEventListener('click', function() {
+      show((current + 1) % total);
+      resetAuto();
+    });
+  }
+
+  // Click dots
+  dots.forEach(function(dot) {
+    dot.addEventListener('click', function() {
+      show(parseInt(this.getAttribute('data-index')));
+      resetAuto();
+    });
+  });
+})();
+
+// ==========================================
+// NEWSLETTER FORM — Kit Integration
+// ==========================================
+(function() {
+  var form = document.querySelector('.newsletter-form');
+  if (!form) return;
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var email = form.querySelector('input[name="email_address"]').value;
+    if (!email) return;
+    var btn = form.querySelector('button[type="submit"]');
+    var origText = btn.textContent;
+    btn.textContent = 'Joining...';
+    btn.disabled = true;
+    fetch(form.action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'email_address=' + encodeURIComponent(email),
+      mode: 'no-cors'
+    }).then(function() {
+      btn.textContent = "You're in! \u2728";
+      form.querySelector('input[name="email_address"]').style.display = 'none';
+    }).catch(function() {
+      btn.textContent = "You're in! \u2728";
+      form.querySelector('input[name="email_address"]').style.display = 'none';
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
