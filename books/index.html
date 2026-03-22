@@ -294,19 +294,15 @@ img { max-width: 100%; display: block; }
 
 .book-cover {
   position: absolute; inset: 0;
-  background:
-    radial-gradient(ellipse at 50% 30%, rgba(80, 50, 90, 0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 30% 80%, rgba(20, 30, 60, 0.3) 0%, transparent 40%),
-    linear-gradient(160deg, #1a1020, #120a18, #0e0812);
   border: 1px solid rgba(196, 168, 77, 0.25);
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  padding: 40px 24px;
   box-shadow:
     10px 10px 40px rgba(0, 0, 0, 0.6),
-    0 0 80px rgba(45, 10, 46, 0.15),
-    inset 0 0 60px rgba(0, 0, 0, 0.3);
+    0 0 80px rgba(45, 10, 46, 0.15);
   overflow: hidden;
+}
+.book-cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
 }
 .book-cover::before {
   content: '';
@@ -679,6 +675,7 @@ img { max-width: 100%; display: block; }
      ======================================== -->
 <nav class="nav" id="mainNav">
   <div class="nav-left">
+    <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/books">Books</a>
     <a href="/signup">Sign Up</a>
@@ -726,15 +723,7 @@ img { max-width: 100%; display: block; }
         <div class="book-3d-inner">
           <div class="book-spine"></div>
           <div class="book-cover">
-            <div class="corner tl"></div>
-            <div class="corner tr"></div>
-            <div class="corner bl"></div>
-            <div class="corner br"></div>
-            <div class="ornament">&#10022; &#10022; &#10022;</div>
-            <div class="cover-title">Shadoward</div>
-            <div class="cover-divider"></div>
-            <div class="cover-subtitle">A Romantasy Novel</div>
-            <div class="cover-author">Alison Archer</div>
+            <img src="https://static1.squarespace.com/static/6875e1fd2269c346bbb9de42/t/69be5376fed5585eafbd7216/1774080887217/shadoward-coming-soon-cover.jpg" alt="SHADOWARD by Alison Archer — Coming Soon">
           </div>
         </div>
       </div>

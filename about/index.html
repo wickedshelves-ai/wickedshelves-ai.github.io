@@ -130,9 +130,12 @@ img { max-width: 100%; display: block; }
   padding: 180px 0 140px;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 30% 40%, rgba(45, 10, 46, 0.3) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(10, 20, 50, 0.2) 0%, transparent 40%),
-    linear-gradient(170deg, #0e0a14, #0c0c18, #0a0a0c);
+    radial-gradient(ellipse at 30% 40%, rgba(45, 10, 46, 0.35) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(10, 20, 50, 0.25) 0%, transparent 40%),
+    linear-gradient(170deg, rgba(14, 10, 20, 0.85), rgba(12, 12, 24, 0.85), rgba(10, 10, 12, 0.85)),
+    url('/assets/backgrounds/fog-forest-moody.jpg');
+  background-size: cover;
+  background-position: center;
 }
 .author-inner {
   max-width: 1200px;
@@ -396,6 +399,7 @@ img { max-width: 100%; display: block; }
      ======================================== -->
 <nav class="nav" id="mainNav">
   <div class="nav-left">
+    <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/books">Books</a>
     <a href="/signup">Sign Up</a>

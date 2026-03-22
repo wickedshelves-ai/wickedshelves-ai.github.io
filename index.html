@@ -648,9 +648,12 @@ img { max-width: 100%; display: block; }
   text-align: center;
   overflow: hidden;
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(50, 15, 55, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 30%, rgba(50, 15, 55, 0.3) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 100%, rgba(196, 168, 77, 0.05) 0%, transparent 30%),
-    linear-gradient(170deg, #12101a, #100e18, #0e0c14);
+    linear-gradient(170deg, rgba(18, 16, 26, 0.88), rgba(16, 14, 24, 0.88), rgba(14, 12, 20, 0.88)),
+    url('/assets/backgrounds/lavender-field-dusk.jpg');
+  background-size: cover;
+  background-position: center;
   border-top: 1px solid rgba(160, 120, 180, 0.1);
 }
 #newsletter-stars {
@@ -876,6 +879,7 @@ img { max-width: 100%; display: block; }
      ======================================== -->
 <nav class="nav" id="mainNav">
   <div class="nav-left">
+    <a href="/">Home</a>
     <a href="/about">About</a>
     <a href="/books">Books</a>
     <a href="/signup">Sign Up</a>
@@ -906,9 +910,8 @@ img { max-width: 100%; display: block; }
   <div class="hero-fade"></div>
 
   <div class="hero-content">
-    <p class="hero-pre reveal">Romantasy Author</p>
-    <h1 class="hero-title reveal reveal-delay-1">Stories worth<br><span class="gold">staying up</span> for.</h1>
-    <p class="hero-sub reveal reveal-delay-2">Romantasy with mystery, heat, and twists you won't see coming.</p>
+    <h1 class="hero-title reveal">Stories worth<br><span class="gold">staying up</span> for.</h1>
+    <p class="hero-sub reveal reveal-delay-1">Fantasy romance with mystery, heat, and twists you won't see coming.</p>
     <div class="hero-cta-group reveal reveal-delay-3">
       <a href="/books" class="btn-primary">Discover Shadoward</a>
       <a href="/signup" class="btn-ghost">Get Early Access</a>
