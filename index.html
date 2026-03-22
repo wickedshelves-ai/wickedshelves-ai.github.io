@@ -310,6 +310,7 @@ img { max-width: 100%; display: block; }
 
 .book-cover {
   position: absolute; inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
   box-shadow:
     10px 10px 40px rgba(0, 0, 0, 0.6),
     0 0 60px rgba(45, 10, 46, 0.15);
@@ -419,11 +420,13 @@ img { max-width: 100%; display: block; }
 .trope-card {
   position: relative;
   padding: 40px 28px;
-  border: 1px solid rgba(196, 168, 77, 0.18);
-  background: rgba(196, 168, 77, 0.03);
+  border: 1px solid rgba(196, 168, 77, 0.25);
+  background: rgba(10, 10, 12, 0.6);
   text-align: center;
   transition: all 0.4s;
   overflow: hidden;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .trope-card::before {
   content: '';
