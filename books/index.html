@@ -294,33 +294,16 @@ img { max-width: 100%; display: block; }
 
 .book-cover {
   position: absolute; inset: 0;
-  border: 1px solid rgba(196, 168, 77, 0.25);
   box-shadow:
     10px 10px 40px rgba(0, 0, 0, 0.6),
-    0 0 80px rgba(45, 10, 46, 0.15);
+    0 0 60px rgba(45, 10, 46, 0.15);
   overflow: hidden;
 }
 .book-cover img {
   width: 100%; height: 100%;
   object-fit: cover;
+  display: block;
 }
-.book-cover::before {
-  content: '';
-  position: absolute; inset: 8px;
-  border: 1px solid rgba(196, 168, 77, 0.15);
-  pointer-events: none;
-}
-/* Decorative corner flourishes */
-.book-cover .corner {
-  position: absolute;
-  width: 24px; height: 24px;
-  border-color: rgba(196, 168, 77, 0.35);
-  border-style: solid;
-}
-.book-cover .corner.tl { top: 16px; left: 16px; border-width: 1px 0 0 1px; }
-.book-cover .corner.tr { top: 16px; right: 16px; border-width: 1px 1px 0 0; }
-.book-cover .corner.bl { bottom: 16px; left: 16px; border-width: 0 0 1px 1px; }
-.book-cover .corner.br { bottom: 16px; right: 16px; border-width: 0 1px 1px 0; }
 
 .book-cover .ornament {
   font-size: 22px; color: rgba(196, 168, 77, 0.5);
